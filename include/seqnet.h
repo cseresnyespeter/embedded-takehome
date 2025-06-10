@@ -9,13 +9,13 @@
  * +--------+--------------------------------------------------------------------------------+
  * | Bits   | Description                                                                    |
  * +--------+--------------------------------------------------------------------------------+
- * |  7..0  | jump address - needs to be loaded to PC if condition is true                   | 
- * |    8   | request to move the elevator upwards                                           | 
- * |    9   | request to move the elevator downwards                                         | 
- * |   10   | target door state (0: closed, 1: open)                                         | 
- * |   11   | request to clear the pending bit from active call memory for the current floor | 
- * | 13..12 | condition select index                                                         | 
- * |   14   | activates the inversion of the value of the selected condition value           | 
+ * |  7..0  | jump address - needs to be loaded to PC if condition is true                   |
+ * |    8   | request to move the elevator upwards                                           |
+ * |    9   | request to move the elevator downwards                                         |
+ * |   10   | target door state (0: closed, 1: open)                                         |
+ * |   11   | request to clear the pending bit from active call memory for the current floor |
+ * | 13..12 | condition select index                                                         |
+ * |   14   | activates the inversion of the value of the selected condition value           |
  * +--------+--------------------------------------------------------------------------------+
  */
 
@@ -49,7 +49,7 @@ SEQNET_API void SeqNet_init(void);
   * @param[in] condition_active  True, if the selected condition value is active (or inactive if inversion is activate)
   * @return Returns with the new instruction values (@see SeqNet_Out).
   */
-SEQNET_API SeqNet_Out SeqNet_loop(const bool condition_active); 
+SEQNET_API SeqNet_Out SeqNet_loop(const bool condition_active);
 
 #ifdef __cplusplus
 }

@@ -6,14 +6,14 @@
  * +-------+-------------------------------------+
  * | Index | Selected value                      |
  * +-------+-------------------------------------+
- * |   0   | call below or same or above pending | 
- * |   1   | call below pending                  | 
- * |   2   | call same pending                   | 
- * |   3   | call above pending                  | 
- * |   4   | door closed                         | 
- * |   5   | door open                           | 
- * |   6   | reserved                            | 
- * |   7   | fixed 0 (false)                     | 
+ * |   0   | call below or same or above pending |
+ * |   1   | call below pending                  |
+ * |   2   | call same pending                   |
+ * |   3   | call above pending                  |
+ * |   4   | door closed                         |
+ * |   5   | door open                           |
+ * |   6   | reserved                            |
+ * |   7   | fixed 0 (false)                     |
  * +-------+-------------------------------------+
  */
 
@@ -42,7 +42,7 @@ typedef struct {
  * @param[in] index   Index of the value to select (@see documentation for details).
  * @param[in] values  External input values to select.
  * @return Resturns with the selected value or the negated value of it.
- */  
+ */
 CONDSEL_API bool CondSel_calc(const bool invert, const uint8_t index, const CondSel_In values);
 
 #ifdef __cplusplus
