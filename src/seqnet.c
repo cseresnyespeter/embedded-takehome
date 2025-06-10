@@ -4,8 +4,6 @@
 
 #define PROG_MEM_SIZE 256U
 
-/* --- Bit-map definitions for instruction encoding --- */
-
 /* Bit positions of instructions. */
 #define BIT_POS_INV         15U
 #define BIT_POS_COND_SEL    12U
@@ -52,20 +50,19 @@ typedef enum {
 /* Program Counter locations, defining the states of the machine. */
 typedef enum {
     STATE_INIT          = 0,  /* Length: 1. */
-    STATE_IDLE          = 1,  /* Length: 2. */
-    STATE_CLOSE_DOOR    = 3,  /* Length: 2. */
-    STATE_CHOOSE_DIR    = 5,  /* Length: 4. */
-    STATE_MOVE_UP       = 9,  /* Length: 2. */
-    STATE_MOVE_DOWN     = 11, /* Length: 2. */
-    STATE_ARRIVED       = 13  /* Length: 2. */
+    STATE_IDLE          = 1,  /* Length: 3. */
+    STATE_CLOSE_DOOR    = 4,  /* Length: 2. */
+    STATE_CHOOSE_DIR    = 6,  /* Length: 4. */
+    STATE_MOVE_UP       = 10, /* Length: 2. */
+    STATE_MOVE_DOWN     = 12, /* Length: 2. */
+    STATE_ARRIVED       = 14  /* Length: 2. */
 } ProgramState;
 
 /* The program memory defines the elevator's state machine logic. */
 static const uint16_t ProgMem[PROG_MEM_SIZE] = {
     /*
      * STATE: INIT.
-     * Purpose: Entry point on power-up.
-     * Action:  Unconditional jump to the main IDLE state.
+     * Purpose: Entry point on power-up. Unconditional jump to the main IDLE state.
      */
     [STATE_INIT] = FIELD_INV | COND_SEL_ALWAYS_FALSE | (uint16_t)STATE_IDLE,
 
@@ -73,8 +70,9 @@ static const uint16_t ProgMem[PROG_MEM_SIZE] = {
      * STATE: IDLE.
      * Purpose: Wait for a call with the door open.
      */
-    [STATE_IDLE]   = COND_SEL_ANY_CALL | FIELD_DOOR_OPEN | (uint16_t)STATE_CLOSE_DOOR,
-    [STATE_IDLE+1] = FIELD_INV | COND_SEL_ALWAYS_FALSE | FIELD_DOOR_OPEN | (uint16_t)STATE_IDLE,
+    [STATE_IDLE]   = COND_SEL_CALL_SAME  | FIELD_RESET | FIELD_DOOR_OPEN | (uint16_t)STATE_IDLE,
+    [STATE_IDLE+1] = COND_SEL_ANY_CALL   | FIELD_DOOR_OPEN | (uint16_t)STATE_CLOSE_DOOR,
+    [STATE_IDLE+2] = FIELD_INV | COND_SEL_ALWAYS_FALSE | FIELD_DOOR_OPEN | (uint16_t)STATE_IDLE,
 
     /*
      * STATE: CLOSE_DOOR.

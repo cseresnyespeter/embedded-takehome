@@ -28,6 +28,18 @@ typedef struct
     bool pending_calls[NUM_FLOORS];
 } ElevatorSimulation;
 
+/* Variable to store previous condition state. */
+static bool condition_active = false;
+
+/**
+ * @brief initialises the simulator.
+ */
+static void init_simulation()
+{
+    SeqNet_init();
+    condition_active = false;
+}
+
 /**
  * @brief Updates the state of the elevator based on the requests.
  * @param sim The elevator simulation state to update.
@@ -86,7 +98,6 @@ static void update_simulation(ElevatorSimulation *sim, const SeqNet_Out *control
  */
 static void run_simulation_steps(ElevatorSimulation *sim, uint16_t max_steps)
 {
-    bool condition_active = false;
     SeqNet_Out controller_outputs = {0};
     bool any_calls_pending = false;
 
@@ -161,7 +172,7 @@ int main(void)
     sim.door_status = DOOR_STATE_OPEN;
     sim.movement_status = MOVEMENT_STOPPED;
     sim.pending_calls[3] = true;
-    SeqNet_init();
+    init_simulation();
     run_simulation_steps(&sim, 100U);
 
     /* TEST 2: Multiple pending calls (floor 5, then floor 1). */
@@ -171,7 +182,7 @@ int main(void)
     sim.movement_status = MOVEMENT_STOPPED;
     sim.pending_calls[1] = true;
     sim.pending_calls[5] = true;
-    SeqNet_init();
+    init_simulation();
     run_simulation_steps(&sim, 100U);
 
     /* TEST 3: Multiple pending calls, starting from floor 3 (floor 5, then floor 1). */
@@ -181,7 +192,7 @@ int main(void)
     sim.movement_status = MOVEMENT_STOPPED;
     sim.pending_calls[1] = true;
     sim.pending_calls[5] = true;
-    SeqNet_init();
+    init_simulation();
     run_simulation_steps(&sim, 100U);
 
 
@@ -191,11 +202,20 @@ int main(void)
     sim.door_status = DOOR_STATE_OPEN;
     sim.movement_status = MOVEMENT_STOPPED;
     sim.pending_calls[5] = true;
-    SeqNet_init();
+    init_simulation();
     run_simulation_steps(&sim, 10U);
 
-    printf("\nADDING NEW CALL TO 1 MID-TRIP\n");
-    sim.pending_calls[1] = true;
+    printf("\nADDING NEW CALL TO 0 MID-TRIP\n");
+    sim.pending_calls[0] = true;
+    run_simulation_steps(&sim, 100U);
+
+    /* TEST 5: Call from floor 0 to floor 0. */
+    printf("\nTEST 5: Call to Floor 0\n");
+    sim.current_floor = 0U;
+    sim.door_status = DOOR_STATE_OPEN;
+    sim.movement_status = MOVEMENT_STOPPED;
+    sim.pending_calls[0] = true;
+    init_simulation();
     run_simulation_steps(&sim, 100U);
 
     printf("\nATests finished.\n");
